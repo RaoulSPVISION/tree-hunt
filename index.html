@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b2a1f">
+<title>The Great Christmas Tree Hunt</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{--bg1:#0d3326;--bg2:#06170f;--gold:#f4c95d;--red:#d23c4f;--green:#2f9e5b;--cream:#fff8ec;--ink:#1d2a24;--muted:#a9c3b6;--paper:#f1e8d8;--line:#e2d6c0;--brown:#6b5d4a}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:#06170f}html,body{margin:0;min-height:100%}
+body{background:radial-gradient(ellipse at top,#164a37 0%,var(--bg1) 40%,var(--bg2) 100%) fixed;color:#fff;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overscroll-behavior:none;-webkit-user-select:none;user-select:none}
+input{-webkit-user-select:text;user-select:text}
+#snow{position:fixed;inset:0;pointer-events:none;z-index:0}
+.lights{position:fixed;top:0;left:0;right:0;height:26px;display:flex;justify-content:space-around;z-index:5;pointer-events:none}
+.lights::before{content:"";position:absolute;top:7px;left:0;right:0;height:2px;background:#0a1a12}
+.bulb{width:10px;height:15px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;margin-top:8px;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 10px currentColor}50%{opacity:.35;box-shadow:none}}
+main{position:relative;z-index:1;padding:36px 16px 100px;max-width:560px;margin:0 auto}
+h1,h2,h3,.title{font-family:Georgia,"Times New Roman",serif}
+h3{margin:0 0 8px;color:var(--gold)}
+.title{font-size:34px;line-height:1.1;text-align:center;color:var(--gold);text-shadow:0 2px 0 #7a4b00,0 0 18px rgba(244,201,93,.4);margin:10px 0}
+.title.small{font-size:25px}
+.center{text-align:center}
+.card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:16px;margin:12px 0}
+.btn{display:block;width:100%;border:0;border-radius:16px;padding:16px;font-size:18px;font-weight:700;background:var(--gold);color:#3b2400;margin:10px 0;box-shadow:0 4px 0 #a5781a;font-family:inherit;cursor:pointer}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #a5781a}
+.btn:disabled{opacity:.4}
+.btn.red{background:var(--red);color:#fff;box-shadow:0 4px 0 #8a1f2e}
+.btn.green{background:var(--green);color:#fff;box-shadow:0 4px 0 #1b6339}
+.btn.ghost{background:rgba(255,255,255,.1);color:#fff;box-shadow:none;border:1px solid rgba(255,255,255,.2)}
+.btn.small{padding:10px 14px;font-size:15px;width:auto;display:inline-block}
+.btn.big{font-size:22px;padding:22px}
+.redtext{color:#ff9aa8!important}
+.row{display:flex;gap:10px}.row>*{flex:1}
+input{width:100%;padding:14px;border-radius:14px;border:2px solid rgba(255,255,255,.2);background:rgba(0,0,0,.25);color:#fff;font-size:17px;font-family:inherit}
+label{display:block;font-size:14px;color:var(--muted);margin:12px 0 6px}
+.avatars{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.av{font-size:28px;padding:6px 0;text-align:center;border-radius:12px;background:rgba(255,255,255,.08);border:2px solid transparent;cursor:pointer}
+.av.sel{border-color:var(--gold);background:rgba(244,201,93,.25)}
+.seg{display:flex;background:rgba(0,0,0,.25);border-radius:14px;padding:4px}
+.seg button{flex:1;border:0;background:none;color:#fff;padding:10px;border-radius:10px;font-size:16px;font-family:inherit}
+.seg button.on{background:var(--gold);color:#3b2400;font-weight:700}
+.member{display:flex;align-items:center;gap:12px;padding:10px;border-radius:14px;background:rgba(255,255,255,.06);margin:8px 0}
+.member .emo{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;flex:none}
+.member .nm{flex:1;font-weight:700;font-size:18px}
+.tag{font-size:12px;padding:3px 8px;border-radius:99px;background:rgba(255,255,255,.12);color:var(--muted)}
+.x{background:rgba(255,255,255,.12);border:0;color:#fff;border-radius:10px;width:40px;height:40px;font-size:16px}
+.hero-tree{font-size:110px;text-align:center;animation:glow 2.5s infinite;margin-top:16px}
+@keyframes glow{50%{filter:drop-shadow(0 0 24px #f4c95d)}}
+.envelope{display:block;margin:18px auto 0;font-size:96px;background:none;border:0;animation:bob 1.6s ease-in-out infinite;cursor:pointer}
+@keyframes bob{50%{transform:translateY(-10px) rotate(-4deg)}}
+.lead{font-size:18px;text-align:center;color:#e8f3ec;line-height:1.4}
+.hint{text-align:center;color:var(--muted)}
+.step{text-align:center;color:var(--gold);letter-spacing:2px;text-transform:uppercase;font-size:12px;margin-top:8px}
+.scroll{background:var(--cream);color:#3a2a14;font-family:Georgia,serif;font-size:19px;line-height:1.55;padding:20px;border-radius:12px;box-shadow:0 0 0 6px rgba(244,201,93,.35);margin:14px 0;text-align:center}
+.signgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;margin:12px 0}
+.sign{background:var(--c);border:0;border-radius:18px;padding:14px 6px;color:#fff;font-weight:700;font-size:15px;display:flex;flex-direction:column;align-items:center;gap:6px;font-family:inherit;box-shadow:0 4px 0 rgba(0,0,0,.3)}
+.sign .e{font-size:40px}
+.sign.done{outline:3px solid var(--gold)}
+.chip-center{text-align:center;margin:6px 0}
+.chip-center span{display:inline-block;background:rgba(244,201,93,.15);border:1px solid rgba(244,201,93,.4);color:var(--gold);padding:6px 12px;border-radius:99px;font-size:14px;margin:3px}
+.label{color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:1.5px}
+.sub{color:var(--muted);font-size:14px}
+.bigcount{font-size:84px;font-weight:800;font-family:Georgia,serif;color:var(--gold);line-height:1;text-shadow:0 0 24px rgba(244,201,93,.45)}
+.badges{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0}
+.badges span{background:rgba(244,201,93,.15);border:1px solid rgba(244,201,93,.4);border-radius:99px;padding:6px 10px;font-size:13px}
+.treebox svg{width:100%;max-width:240px;display:block;margin:0 auto}
+/* session */
+.sesstop{display:flex;align-items:center;gap:10px}
+.sesslabel{flex:1;text-align:center;font-weight:700}
+#timer{font-variant-numeric:tabular-nums;color:var(--muted);font-weight:400;font-size:14px}
+.iconbtn{width:46px;height:46px;border-radius:14px;border:0;background:rgba(255,255,255,.1);font-size:22px}
+.counter{text-align:center;margin-top:8px}
+.nextgift{margin:10px 0 4px;font-size:15px;text-align:center}
+.progress{height:12px;background:rgba(0,0,0,.3);border-radius:99px;overflow:hidden;margin-top:6px}
+.progress>div{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));transition:width .3s}
+.spotgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.spotgrid.one{grid-template-columns:1fr}.spotgrid.one .spot{min-height:220px}
+.spotgrid.odd .spot:last-child{grid-column:span 2}
+.spot{border:0;border-radius:22px;padding:18px 8px;color:#fff;font-family:inherit;min-height:140px;position:relative;box-shadow:0 6px 0 rgba(0,0,0,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer}
+.spot:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.35)}
+.spot .e{font-size:48px}.spot .n{font-size:19px;font-weight:700;margin-top:4px}
+.spot .t{font-size:12px;opacity:.85;margin-top:4px}
+.spot .c{position:absolute;top:8px;right:10px;font-size:18px;font-weight:800;background:rgba(0,0,0,.25);border-radius:99px;padding:2px 10px}
+.spot.pop{animation:pop .35s}
+@keyframes pop{50%{transform:scale(1.07)}}
+.plus{position:fixed;pointer-events:none;font-size:28px;font-weight:800;color:var(--gold);z-index:50;animation:rise .9s forwards;text-shadow:0 2px 6px rgba(0,0,0,.5)}
+@keyframes rise{to{transform:translateY(-90px);opacity:0}}
+.giftchip{position:fixed;right:16px;bottom:24px;width:76px;height:76px;border-radius:50%;background:var(--red);font-size:38px;border:3px solid var(--gold);box-shadow:0 8px 24px rgba(0,0,0,.4);animation:wiggle 1.2s infinite;z-index:30}
+.giftchip b{position:absolute;top:-6px;right:-6px;background:var(--gold);color:#3b2400;border-radius:99px;font-size:14px;padding:2px 8px}
+/* overlay */
+.overlay{position:fixed;inset:0;background:rgba(3,12,8,.82);z-index:40;display:flex;align-items:center;justify-content:center;padding:14px}
+.overlay.hidden{display:none}
+.sheet{background:var(--cream);color:var(--ink);border-radius:26px;padding:22px;width:100%;max-width:480px;max-height:92vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:in .25s}
+@keyframes in{from{transform:scale(.9);opacity:0}}
+.sheet.challenge{border-top:8px solid var(--red)}
+.sheet h2{font-family:Georgia,serif;color:var(--ink);margin:4px 0 10px}
+.sheet label{color:var(--brown)}
+.sheet input{background:#fff;color:var(--ink);border-color:var(--line)}
+.sheet .btn.ghost{background:var(--paper);color:var(--ink);border-color:var(--line)}
+.sheet .av,.sheet .seg{background:var(--paper)}
+.sheet .seg button{color:var(--ink)}
+.sheet .sub{color:var(--brown)}
+.letter{font-family:Georgia,serif;font-size:17px;line-height:1.5;color:#3a2a14}
+.letter p{margin:0 0 10px}
+.letter .sig{text-align:right;font-style:italic;font-size:20px}
+.letter-head{text-align:center;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--red);font-weight:700;margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chips button{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:99px;padding:8px 12px;font-size:14px;font-family:inherit}
+.whogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:8px;margin:8px 0}
+.who{background:var(--paper);border:3px solid transparent;border-radius:16px;padding:10px 4px;font-size:32px;font-family:inherit;color:var(--ink)}
+.who small{font-size:13px;font-weight:600}
+.who.on{border-color:var(--green);background:#dff3e6}
+.safety{background:#fff1d6;border-left:4px solid var(--gold);padding:10px;border-radius:8px;font-size:14px;margin:12px 0;color:#5a4210}
+.ctype{display:inline-block;color:#fff;padding:6px 12px;border-radius:99px;font-weight:700;font-size:14px;margin-bottom:10px}
+.ctype.sm{font-size:12px;padding:4px 10px;margin-bottom:6px}
+.q{font-family:Georgia,serif;font-size:23px;line-height:1.3;margin:6px 0 14px;color:var(--ink)}
+.lvl{font-size:13px;color:var(--brown);font-weight:600}
+.opt{display:block;width:100%;text-align:left;padding:14px;border-radius:14px;border:2px solid var(--line);background:#fff;margin:8px 0;font-size:17px;font-family:inherit;color:var(--ink)}
+.opt.right{background:#dff3e6;border-color:var(--green);font-weight:700}
+.opt.wrong{background:#fde2e5;border-color:var(--red)}
+.fact{background:#fff1d6;border-radius:12px;padding:12px;margin:10px 0;color:#5a4210;font-size:16px;line-height:1.4}
+.linkbtn{background:none;border:0;color:var(--brown);text-decoration:underline;font-size:15px;padding:10px;font-family:inherit}
+.gtitle{font-family:Georgia,serif;font-size:24px;color:var(--red);font-weight:700}
+.gift{font-size:140px;line-height:1.2;animation:wiggle .9s ease-in-out infinite;background:none;border:0;display:block;margin:10px auto;cursor:pointer}
+.gift.open{animation:burst .45s forwards}
+@keyframes wiggle{0%,100%{transform:rotate(0) scale(1)}25%{transform:rotate(-9deg) scale(1.04)}75%{transform:rotate(9deg) scale(1.04)}}
+@keyframes burst{to{transform:scale(2.2) rotate(20deg);opacity:0}}
+.mnum{font-size:96px;font-weight:800;font-family:Georgia,serif;color:var(--red);line-height:1}
+.badgepill{display:inline-block;background:var(--gold);color:#3b2400;border-radius:99px;padding:8px 14px;font-weight:700;margin:8px 0}
+.ornbig{width:110px;height:110px;border-radius:50%;margin:24px auto 10px;background:radial-gradient(circle at 32% 30%,#fff 0 8%,var(--oc) 32%,color-mix(in srgb,var(--oc) 55%,#000) 100%);box-shadow:0 10px 30px rgba(0,0,0,.25);position:relative;animation:swing 2s ease-in-out infinite;transform-origin:50% -30px}
+.ornbig::before{content:"";position:absolute;top:-14px;left:50%;width:26px;height:16px;margin-left:-13px;background:#c9a227;border-radius:4px 4px 2px 2px}
+@keyframes swing{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+.ornname{font-weight:700;font-size:20px}
+.santa{font-style:italic;font-family:Georgia,serif;font-size:17px;color:#5a4210}
+/* history & family */
+.tabs{display:flex;gap:8px;overflow-x:auto;margin:8px 0}
+.tabs button{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;border-radius:99px;padding:8px 16px;font-size:15px;font-family:inherit}
+.tabs button.on{background:var(--gold);color:#3b2400;font-weight:700}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.stat{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:12px}
+.stat .k{font-size:12px;color:var(--muted)}.stat .val{font-size:17px;font-weight:700;margin-top:2px}
+.note{font-size:14px;color:#d9e8df;background:rgba(244,201,93,.1);border-radius:12px;padding:10px 12px;line-height:1.4}
+.chart{display:flex;align-items:stretch;gap:3px;height:170px;overflow-x:auto;padding-bottom:4px}
+.col{flex:1 0 14px;display:flex;flex-direction:column;align-items:center}
+.col .v{font-size:9px;color:var(--muted);height:12px}
+.col .bw{flex:1;width:100%;display:flex;align-items:flex-end}
+.col .bar{width:100%;background:linear-gradient(var(--gold),var(--red));border-radius:4px 4px 0 0;min-height:2px}
+.col.tg .bar{background:#f6ad55}.col.xm .bar{background:#48bb78}
+.col .dl{font-size:9px;color:var(--muted);height:14px;white-space:nowrap}
+.legend{font-size:12px;color:var(--muted);margin:6px 0 0}
+.hunt{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.hunt small{color:var(--muted)}.hn{text-align:right;font-weight:700;white-space:nowrap}
+table.cmp{width:100%;border-collapse:collapse;font-size:14px}
+table.cmp th,table.cmp td{padding:8px 4px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)}
+table.cmp th{color:var(--muted);font-weight:600}
+.award{display:flex;align-items:center;gap:12px;padding:10px;border-radius:14px;background:rgba(244,201,93,.08);margin:8px 0}
+.award .ai{font-size:30px}.award .at{flex:1}.award .at small{color:var(--muted);display:block}
+.lb{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.lb .rk{width:28px;font-size:20px;text-align:center}.lb .nm{flex:1;font-weight:700}.lb .sc{text-align:right;font-size:15px}
+.trow{display:flex;align-items:center;justify-content:space-between;padding:8px 0}
+.tog{width:54px;height:32px;border-radius:99px;border:0;background:rgba(255,255,255,.2);position:relative;flex:none}
+.tog::after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;transition:.2s}
+.tog.on{background:var(--green)}.tog.on::after{left:25px}
+.savedrow{display:block;width:100%;text-align:left;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:16px;padding:12px;margin:8px 0;font-size:15px;font-family:inherit}
+.foot{text-align:center;color:var(--muted);font-size:12px}
+.nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:rgba(5,20,13,.94);border-top:1px solid rgba(255,255,255,.1);padding:6px 6px calc(6px + env(safe-area-inset-bottom));z-index:20}
+.nav button{flex:1;background:none;border:0;color:var(--muted);font-size:12px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px;font-family:inherit}
+.nav button span{font-size:22px}.nav button.on{color:var(--gold)}
+#toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(20px);background:var(--cream);color:var(--ink);padding:12px 18px;border-radius:99px;font-weight:600;opacity:0;transition:.25s;z-index:70;pointer-events:none;max-width:90vw;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+#toast.show{opacity:1;transform:translateX(-50%)}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden}
+#confetti i{position:absolute;top:-14px;width:8px;height:14px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important}}
+</style>
+</head>
+<body>
+<canvas id="snow"></canvas>
+<div class="lights" id="lights"></div>
+<main id="app"></main>
+<nav id="nav"></nav>
+<div id="overlay" class="overlay hidden"></div>
+<div id="confetti"></div>
+<div id="toast"></div>
+<script>
+'use strict';
+/* ============ CONTENT (append new items at the END of each list so saved IDs stay valid) ============ */
+const AVATARS=['🎅','🤶','🧝','🧝‍♀️','🦌','⛄','🐧','🐻‍❄️','👼','🍪','⭐','🔔','🎁','🍭','❄️','🧸','🦉','🐿️'];
+const COLORS=['#d23c4f','#2f9e5b','#2b6cb0','#b7791f','#805ad5','#d0568b','#2c7a7b','#c05621'];
+const ORN=[['#e53e3e','Red Bauble'],['#f6c343','Gold Star'],['#cbd5e0','Silver Bell'],['#63b3ed','Blue Snowflake'],['#48bb78','Green Glass Ball'],['#9f7aea','Purple Plum'],['#fc8181','Candy Cane Swirl'],['#f687b3','Pink Sugarplum'],['#f6ad55','Orange Glow'],['#4fd1c5','Teal Twinkle'],['#c53030','Cranberry'],['#f7fafc','Frosted Snowball'],['#3182ce','Royal Blue'],['#2f855a','Emerald'],['#c05621','Copper Shine'],['#b794f4','Lilac Dream'],['#9b2c2c','Ruby'],['#d69e2e','Golden Pinecone'],['#bee3f8','Ice Crystal'],['#e53e3e','Holly Berry'],['#2c5282','Midnight Sky'],['#9ae6b4','Peppermint'],['#feb2b2','Rose Gold'],['#fefcbf','Starlight']].map(([c,n])=>({c,n}));
+const SLOTS=[[100,48],[86,74],[116,78],[78,98],[124,98],[70,120],[100,112],[130,122],[56,140],[88,138],[118,142],[146,136],[74,158],[126,160],[100,168],[44,190],[70,176],[132,176],[160,188],[58,200],[86,196],[114,198],[142,200],[100,190]];
+const TYPES={
+ trivia:{name:'Christmas Trivia',icon:'🧠',color:'#2b6cb0',w:30},
+ challenge:{name:'Quick Challenge',icon:'⏱️',color:'#d23c4f',w:15},
+ charades:{name:'Seat Charades',icon:'🎭',color:'#805ad5',w:12},
+ riddle:{name:'Holiday Riddle',icon:'🤔',color:'#b7791f',w:12},
+ wyr:{name:'Would You Rather?',icon:'🤷',color:'#d0568b',w:11},
+ sing:{name:'Finish the Carol',icon:'🎶',color:'#2f9e5b',w:10},
+ family:{name:'Family Question',icon:'💬',color:'#2c7a7b',w:10}
+};
+const TRIVIA=[
+['kid','Where does Santa live?',['The South Pole','The North Pole','The Moon'],1,'Santa’s workshop is said to be at the North Pole.'],
+['kid','What do people often leave out for Santa on Christmas Eve?',['Milk and cookies','Pizza','Ice cream'],0,'In the UK and Ireland, Santa often gets a mince pie instead!'],
+['kid','What do you hang by the fireplace for Santa to fill?',['Mittens','Stockings','Hats'],1],
+['kid','What color are the stripes on a classic candy cane?',['Red and white','Blue and green','Yellow and purple'],0],
+['kid','What do we call Santa’s helpers who make the toys?',['Gnomes','Elves','Fairies'],1],
+['kid','Which animals pull Santa’s sleigh?',['Horses','Reindeer','Polar bears'],1],
+['kid','What date is Christmas Eve?',['December 24','December 25','December 31'],0],
+['kid','In Australia, what season is it at Christmas?',['Winter','Summer','Autumn'],1,'Australia is in the Southern Hemisphere, so Christmas comes in summer — beach time!'],
+['kid','What plant do people stand under to share a Christmas kiss?',['Mistletoe','Holly','Ivy'],0],
+['kid','How many arms does a snowflake usually have?',['Four','Six','Eight'],1,'Water freezes into six-sided crystals, so snowflakes have six arms.'],
+['kid','What spice gives gingerbread its flavor?',['Ginger','Chocolate','Strawberry'],0],
+['kid','What does “Joyeux Noël” mean?',['Happy New Year','Merry Christmas','Good night'],1,'It’s French for Merry Christmas.'],
+['all','Which country started the tradition of decorating Christmas trees?',['Germany','Italy','Canada'],0,'Decorated trees go back centuries in Germany; the custom spread around the world in the 1800s.'],
+['all','How many reindeer pull the sleigh in the 1823 poem “A Visit from St. Nicholas”?',['Six','Eight','Twelve'],1,'Dasher, Dancer, Prancer, Vixen, Comet, Cupid, Dunder and Blixem — later renamed Donner and Blitzen.'],
+['all','What does “Feliz Navidad” mean in English?',['Happy holidays','Merry Christmas','Happy birthday'],1,'It’s Spanish for Merry Christmas.'],
+['all','Which red-leaved plant is a favorite Christmas decoration?',['Poinsettia','Tulip','Sunflower'],0],
+['all','Which Christmas ballet features the Sugar Plum Fairy?',['Swan Lake','The Nutcracker','Cinderella'],1],
+['all','What date is Boxing Day?',['December 24','December 26','January 1'],1],
+['all','How many days of Christmas are in the famous carol?',['Seven','Ten','Twelve'],2],
+['all','In “The Twelve Days of Christmas,” what’s given on the first day?',['Two turtle doves','A partridge in a pear tree','Five gold rings'],1],
+['all','Do female reindeer grow antlers?',['Yes','No','Only at Christmas'],0,'Reindeer are the only deer where both males and females usually grow antlers.'],
+['all','What is a baby reindeer called?',['A calf','A cub','A kit'],0],
+['all','In the movie “Elf,” which city does Buddy travel to?',['Chicago','New York City','Los Angeles'],1],
+['all','In “Home Alone,” where is Kevin’s family flying to?',['London','Paris','Rome'],1],
+['all','In the Netherlands, what do children set out for Sinterklaas to fill?',['Shoes','Socks','Bowls'],0,'They often leave a carrot or some hay inside for Sinterklaas’s horse.'],
+['all','Which city is famous for the giant Christmas tree at Rockefeller Center?',['Toronto','New York City','Boston'],1],
+['adult','Which country sends a giant Christmas tree to London’s Trafalgar Square every year?',['Norway','Sweden','Denmark'],0,'Norway has sent one every year since 1947 as thanks for Britain’s help during World War II.'],
+['adult','In which present-day country was St. Nicholas a bishop?',['Greece','Turkey','Italy'],1,'He was bishop of Myra, in what is now Turkey.'],
+['adult','The poinsettia is native to which country?',['Brazil','Mexico','Spain'],1],
+['adult','Who composed the music for “The Nutcracker”?',['Mozart','Tchaikovsky','Beethoven'],1],
+['adult','What is Scrooge’s first name in “A Christmas Carol”?',['Ebenezer','Jacob','Bob'],0,'Jacob Marley is his old partner; Bob Cratchit is his clerk.'],
+['adult','How many spirits visit Scrooge after Marley’s ghost?',['Two','Three','Four'],1],
+['adult','In which country was “Silent Night” first performed, in 1818?',['Germany','Austria','Switzerland'],1,'It was first sung in Oberndorf, near Salzburg.'],
+['adult','Electric Christmas tree lights were first shown off in 1882 by a business partner of which inventor?',['Thomas Edison','Nikola Tesla','Alexander Graham Bell'],0,'Edward H. Johnson wired a tree with 80 red, white and blue bulbs.'],
+['adult','In Italy, which kind witch brings children gifts on Epiphany?',['La Befana','La Strega','La Nonna'],0],
+['adult','In Japan, a popular Christmas Eve meal comes from which restaurant chain?',['McDonald’s','KFC','Pizza Hut'],1],
+['adult','In the UK, which Christmas dessert is sometimes set on fire before serving?',['Trifle','Christmas pudding','Yule log'],1],
+['adult','What is the season of 12 days after Christmas, ending January 6, called?',['Advent','Christmastide','Lent'],1,'Christmastide ends on Epiphany, January 6.']
+];
+const CHARADES=['Building a snowman','Santa stuck in a chimney','A reindeer getting ready for takeoff','Wrapping a present that won’t stay closed','Ice skating for the first time','Decorating a Christmas tree','A marching nutcracker soldier','An elf in a hurry making toys','Sledding down a big hill','Drinking hot cocoa that’s way too hot','A penguin waddling','Opening a present you secretly don’t like','A snowball fight','Untangling a big knot of Christmas lights','Baking Christmas cookies','Caroling door to door','Catching snowflakes on your tongue','Santa reading his naughty-or-nice list'];
+const QUICK=[
+['Name five Christmas songs in 20 seconds!',20],
+['Name three Christmas movies in 15 seconds!',15],
+['Name five things that are red AND green in 20 seconds!',20],
+['Go around the car: everyone names something you’d hang on a Christmas tree. No repeats! Last one standing wins.',0],
+['Spell REINDEER backwards. Go!',0,'R-E-E-D-N-I-E-R'],
+['Name all eight reindeer from the 1823 poem in 30 seconds!',30,'Dasher, Dancer, Prancer, Vixen, Comet, Cupid, Donner and Blitzen (first written as Dunder and Blixem).'],
+['Hum a Christmas song — everyone else has to guess it!',0],
+['Do your best Santa laugh. The family votes on the winner!',0],
+['Describe a Christmas tree WITHOUT saying “tree,” “green” or “Christmas.”',0],
+['Bonus round: first person to spot a house with outdoor lights wins a cheer from everyone!',0],
+['Name a Christmas word for each letter of S-N-O-W in 30 seconds!',30],
+['Say “Santa’s sleigh slides swiftly” five times fast!',0],
+['Everyone guess how many trees we’ll spot on this hunt. Closest guess wins at the end!',0],
+['Name five Christmas foods in 15 seconds!',15]
+];
+// Public-domain carols only (all written before 1929)
+const SING=[
+['Dashing through the snow…','In a one-horse open sleigh','Jingle Bells (1857)'],
+['Jingle bells, jingle bells…','Jingle all the way','Jingle Bells (1857)'],
+['Deck the halls with boughs of holly…','Fa la la la la, la la la la','Deck the Halls (traditional)'],
+['We wish you a merry Christmas, we wish you a merry Christmas, we wish you a merry Christmas…','And a happy New Year!','We Wish You a Merry Christmas (traditional)'],
+['Joy to the world, the Lord is come…','Let earth receive her King','Joy to the World (1719)'],
+['Silent night, holy night…','All is calm, all is bright','Silent Night (1818)'],
+['O Christmas tree, O Christmas tree…','How lovely are thy branches','O Christmas Tree (traditional)'],
+['Hark! the herald angels sing…','Glory to the newborn King','Hark! The Herald Angels Sing (1739)'],
+['Away in a manger, no crib for a bed…','The little Lord Jesus laid down his sweet head','Away in a Manger (1880s)'],
+['God rest ye merry, gentlemen…','Let nothing you dismay','God Rest Ye Merry, Gentlemen (traditional)']
+];
+const RIDDLES=[
+['What do you call a snowman in July?','A puddle!'],
+['I have needles, but I can’t sew. What am I?','A Christmas tree!'],
+['What falls all winter but never gets hurt?','Snow!'],
+['What did the Christmas tree say to the ornament?','“Quit hanging around!”'],
+['Why is Santa so good at karate?','He has a black belt!'],
+['Where do snowmen keep their money?','In a snow bank!'],
+['What do you call a reindeer with no eyes?','No eye-deer! (No idea!)'],
+['What do elves learn in school?','The elf-abet!'],
+['What do you get if you cross a snowman and a vampire?','Frostbite!'],
+['What kind of music do elves love?','Wrap music!'],
+['What goes “oh oh oh”?','Santa walking backwards!'],
+['How does a snowman get around town?','By riding an icicle!']
+];
+const WYR=['have a pet reindeer or a pet penguin?','live in a snow globe or a gingerbread house?','get one giant present or ten small ones?','be one of Santa’s elves or one of his reindeer?','spend Christmas on a sunny beach or in a snowy cabin?','eat only cookies or only candy canes for a whole day?','ride in Santa’s sleigh or on a magic train to the North Pole?','have a talking Christmas tree or a snowman that comes to life?','wrap all the presents or bake all the cookies?','have snow every day of the year or never see snow again?'];
+const FAMQ=['What’s your favorite Christmas memory ever?','What’s the best present you’ve ever given someone?','If you could invent a brand-new family Christmas tradition, what would it be?','What’s your favorite Christmas food — and why?','What would you ask Santa to bring someone else in this car?','What are you most thankful for this year?','Which ornament on our tree is your favorite, and what’s its story?','If you were Santa for a day, what’s the first thing you’d do?','What’s one kind thing we could do for someone this Christmas?','What makes Christmas feel like Christmas to you?'];
+const SANTA=['Ho ho ho! The elves say your family has the sharpest eyes in the land!','Mrs. Claus is baking a batch of cookies in your honor!','The reindeer did a happy dance when they heard about your counting!','Keep it up, hunters — the whole North Pole is cheering for you!','Santa’s Spotter Report: excellent teamwork today!','The elves just added a gold star next to your family’s name!','Ho ho ho! Now THAT was a fine bit of holiday fun!'];
+const MS_MSG={25:'A quarter of the way to 100! The elves are impressed.',50:'Fifty trees! Santa just put a gold star next to your name.',100:'ONE HUNDRED TREES! You are officially Legendary Tree Hunters.',250:'250 trees! The reindeer can’t believe their eyes.',500:'500 trees! That’s a whole forest of Christmas cheer!',1000:'ONE THOUSAND TREES! The North Pole is throwing you a parade!'};
+const MS_ICON={first:'🌟 First Tree',m25:'🎄 25',m50:'⭐ 50',m100:'🏆 100',m250:'🦌 250',m500:'🌲 500',m1000:'👑 1000'};
+const MILESTONES=[25,50,100,250,500,1000];
+const CH=[];
+TRIVIA.forEach((t,i)=>CH.push({id:'tr'+i,type:'trivia',l:t[0],q:t[1],o:t[2],ans:t[3],f:t[4]||''}));
+QUICK.forEach((t,i)=>CH.push({id:'qc'+i,type:'challenge',q:t[0],t:t[1]||0,a:t[2]||''}));
+CHARADES.forEach((t,i)=>CH.push({id:'ch'+i,type:'charades',q:'Act out: '+t}));
+RIDDLES.forEach((t,i)=>CH.push({id:'rd'+i,type:'riddle',q:t[0],a:t[1]}));
+WYR.forEach((t,i)=>CH.push({id:'wr'+i,type:'wyr',q:'Would you rather '+t}));
+SING.forEach((t,i)=>CH.push({id:'sg'+i,type:'sing',q:'“'+t[0]+'”',a:t[1],src:t[2]}));
+FAMQ.forEach((t,i)=>CH.push({id:'fq'+i,type:'family',q:t}));
+const CHM=Object.fromEntries(CH.map(c=>[c.id,c]));
+const LETTER_P=['Dear Tree Hunters,','The elves and I have heard there’s a family out there with the sharpest eyes in all the land. This Christmas season, I need your help: spot every Christmas tree you can — in windows, in yards, and in town squares.','Every five trees you find, I’ll send you a surprise. Answer my trivia, act out my charades, sing my carols… and decorate your very own family tree with ornaments.','One very important rule: the driver keeps their eyes on the road. Spotting is for passengers!','Are you ready to join the Great Christmas Tree Hunt?'];
+const OATH='I promise to keep my eyes peeled for every twinkling tree, to count each tree only once, to cheer on my family, and to <b>never, ever distract the driver</b>.';
+
+/* ============ STATE ============ */
+const $=s=>document.querySelector(s);
+const app=$('#app');
+const KEY='gcth-v1';
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const rand=a=>a[Math.floor(Math.random()*a.length)];
+function blank(){return{v:1,deviceId:uid(),created:Date.now(),onboarded:false,family:{name:'',members:[]},settings:{sound:true,voice:true},events:[],sessions:[],log:[],saved:[],badges:[],used:[],activeSession:null}}
+function load(){try{const r=localStorage.getItem(KEY);if(r)return Object.assign(blank(),JSON.parse(r))}catch(e){}return blank()}
+let S=load();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('⚠️ Couldn’t save — is storage full?')}}
+
+const seasonOf=ts=>{const d=new Date(ts);return d.getMonth()<6?d.getFullYear()-1:d.getFullYear()};
+const curSeason=()=>seasonOf(Date.now());
+const dayKey=ts=>{const d=new Date(ts);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())};
+const keyDate=k=>{const[y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d)};
+const fmtDate=ts=>new Date(ts).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+const fmtDur=ms=>{const s=Math.max(0,Math.floor(ms/1000)),h=Math.floor(s/3600),m=Math.floor(s%3600/60);return h?`${h}:${pad(m)}:${pad(s%60)}`:`${m}:${pad(s%60)}`};
+const fmtHrs=h=>h<1?Math.round(h*60)+' min':h.toFixed(1)+' h';
+function thanksgiving(y){const d=new Date(y,10,1);return new Date(y,10,1+((4-d.getDay()+7)%7)+21)}
+const member=id=>S.family.members.find(m=>m.id===id);
+const activeMembers=()=>S.family.members.filter(m=>!m.archived);
+const activeSession=()=>S.sessions.find(s=>s.id===S.activeSession&&!s.end);
+const eventsOf=y=>S.events.filter(e=>seasonOf(e.ts)===y);
+const sessionEvents=s=>S.events.filter(e=>e.s===s.id);
+const famTitle=()=>S.family.name.trim()?`The ${esc(S.family.name.trim())} Family’s`:'Our Family’s';
+const famSpoken=()=>S.family.name.trim()?`the ${S.family.name.trim()} family`:'tree hunters';
+
+/* ============ SOUND, VOICE, FX ============ */
+let ac=null;
+function unlockAudio(){if(!ac){try{ac=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(ac&&ac.state==='suspended')ac.resume()}
+function tone(f,t0,d,type='sine',v=.18){if(!ac||!S.settings.sound)return;try{const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime+t0;o.type=type;o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g).connect(ac.destination);o.start(t);o.stop(t+d+.05)}catch(e){}}
+function chime(){unlockAudio();tone(1318.5,0,.35);tone(1975.5,.06,.4,'sine',.1)}
+function fanfare(){unlockAudio();[523,659,784,1047].forEach((f,i)=>tone(f,i*.11,.4,'triangle',.16))}
+function jingle(){unlockAudio();const E=659,G=784,C=523,D=587;let t=0;[[E,.16],[E,.16],[E,.32],[E,.16],[E,.16],[E,.32],[E,.16],[G,.16],[C,.24],[D,.08],[E,.5]].forEach(([f,d])=>{tone(f,t,d*1.6,'triangle',.15);tone(f*2,t,d,'sine',.04);t+=d+.04})}
+function beep(){unlockAudio();tone(880,0,.2,'square',.07);tone(880,.3,.2,'square',.07);tone(1320,.6,.5,'square',.07)}
+function vibrate(p){try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
+function say(t){if(!S.settings.voice||!('speechSynthesis' in window))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(String(t).replace(/<[^>]+>/g,'').replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}]/gu,''));u.lang='en-US';u.rate=.98;u.pitch=1.05;speechSynthesis.speak(u)}catch(e){}}
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2300)}
+function confetti(n=90){const box=$('#confetti'),cols=['#f4c95d','#d23c4f','#2f9e5b','#ffffff','#63b3ed'];for(let i=0;i<n;i++){const d=document.createElement('i');d.style.left=Math.random()*100+'vw';d.style.background=cols[i%cols.length];d.style.animationDuration=(1.8+Math.random()*1.6)+'s';d.style.animationDelay=Math.random()*.4+'s';box.appendChild(d);setTimeout(()=>d.remove(),4200)}}
+function floatPlus(ev){const d=document.createElement('div');d.className='plus';d.textContent='+1 🎄';d.style.left=((ev&&ev.clientX)||innerWidth/2)-34+'px';d.style.top=((ev&&ev.clientY)||innerHeight/2)-30+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),900)}
+let wl=null;
+async function wake(){try{if('wakeLock' in navigator&&activeSession()&&!wl){wl=await navigator.wakeLock.request('screen');wl.addEventListener('release',()=>wl=null)}}catch(e){}}
+function sleepOk(){try{wl&&wl.release()}catch(e){}wl=null}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')wake()});
+
+/* ============ OVERLAY QUEUE ============ */
+let overlayOpen=false,queue=[];
+function showOverlay(html,cls=''){const o=$('#overlay');o.innerHTML=`<div class="sheet ${cls}">${html}</div>`;o.classList.remove('hidden');overlayOpen=true}
+function closeOverlay(){const o=$('#overlay');o.classList.add('hidden');o.innerHTML='';overlayOpen=false;if(queue.length)queue.shift()();else if(view==='session')render()}
+function queueOverlay(fn){if(overlayOpen)queue.push(fn);else fn()}
+function nextQ(){if(queue.length)queue.shift()()}
+
+/* ============ ROUTER ============ */
+let view=S.onboarded?(activeSession()?'session':'home'):'intro';
+function go(v){view=v;window.scrollTo(0,0);render()}
+function render(){({intro:renderIntro,setup:renderSetup,oath:renderOath,home:renderHome,session:renderSession,history:renderHistory,family:renderFamily,settings:renderSettings,saved:renderSaved}[view]||renderHome)();renderNav()}
+function renderNav(){const n=$('#nav');if(!S.onboarded||['session','intro','setup','oath'].includes(view)){n.innerHTML='';n.className='';return}
+ n.className='nav';n.innerHTML=[['home','🏠','Home'],['history','📜','History'],['family','👪','Family'],['settings','⚙️','Settings']].map(([v,i,l])=>`<button class="${view===v||(v==='home'&&view==='saved')?'on':''}" onclick="go('${v}')"><span>${i}</span>${l}</button>`).join('')}
+
+/* ============ ONBOARDING ============ */
+function renderIntro(){app.innerHTML=`<div class="hero-tree">🎄</div><div class="title">The Great<br>Christmas Tree Hunt</div><p class="lead">Something just arrived from the North Pole…</p><button class="envelope" onclick="openLetter()" aria-label="Open the letter">✉️</button><p class="hint">Tap the letter to open it</p>`}
+function openLetter(){unlockAudio();jingle();
+ showOverlay(`<div class="letter-head">✦ Official North Pole Mail ✦</div><div class="letter">${LETTER_P.map(p=>`<p>${p}</p>`).join('')}<p class="sig">Ho ho ho,<br>Santa 🎅</p></div><button class="btn red" onclick="closeOverlay();go(S.onboarded?'home':'setup')">🎄 We accept the mission!</button><button class="linkbtn" onclick="say(LETTER_P.join(' ')+' Ho ho ho, Santa.')">🔊 Read it again</button>`);
+ say(LETTER_P.join(' ')+' Ho ho ho! Santa.')}
+let draft={name:'',avatar:'🎅',kind:'kid'},signed=new Set();
+function memberRow(m,extra=''){return `<div class="member"><span class="emo" style="background:${m.color}">${m.avatar}</span><span class="nm">${esc(m.name)}</span><span class="tag">${m.kind==='kid'?'Kid':'Grown-up'}</span>${extra}</div>`}
+function avatarPicker(sel,fn){return `<div class="avatars">${AVATARS.map(a=>`<button class="av ${a===sel?'sel':''}" onclick="${fn}('${a}')">${a}</button>`).join('')}</div>`}
+function renderSetup(){const ms=activeMembers();
+ app.innerHTML=`<div class="step">Step 1 of 2</div><div class="title">Assemble your<br>Hunt Team!</div>
+ <div class="card"><label>Your family name</label><input placeholder="e.g. Tremblay" value="${esc(S.family.name)}" oninput="S.family.name=this.value;save()" maxlength="30"></div>
+ <div class="card"><h3>Add a tree hunter</h3>
+  <label>Name or nickname</label><input id="mname" placeholder="e.g. Mom, Léa, Grandpa" value="${esc(draft.name)}" oninput="draft.name=this.value" maxlength="20">
+  <label>Pick a Christmas avatar</label>${avatarPicker(draft.avatar,'setDraftAv')}
+  <label>Trivia level</label><div class="seg"><button class="${draft.kind==='kid'?'on':''}" onclick="draft.kind='kid';renderSetup()">🧒 Kid</button><button class="${draft.kind==='adult'?'on':''}" onclick="draft.kind='adult';renderSetup()">🧑 Grown-up</button></div>
+  <button class="btn green" onclick="addMember()">➕ Add to the team</button></div>
+ ${ms.length?`<div class="card"><h3>Your team (${ms.length})</h3>${ms.map(m=>memberRow(m,`<button class="x" onclick="removeDraftMember('${m.id}')" aria-label="Remove">✕</button>`)).join('')}</div>`:''}
+ <button class="btn red" ${ms.length?'':'disabled'} onclick="go('oath')">Next: Take the Hunter’s Oath ✨</button>`}
+function setDraftAv(a){draft.avatar=a;renderSetup()}
+function newMember(name,avatar,kind){S.family.members.push({id:uid(),name,avatar,kind,color:COLORS[S.family.members.length%COLORS.length],archived:false,joined:Date.now()})}
+function addMember(){const n=draft.name.trim();if(!n){toast('Type a name first 🎄');$('#mname').focus();return}newMember(n,draft.avatar,draft.kind);draft.name='';chime();save();renderSetup()}
+function removeDraftMember(id){S.family.members=S.family.members.filter(m=>m.id!==id);save();renderSetup()}
+function renderOath(){const ms=activeMembers(),left=ms.filter(m=>!signed.has(m.id)).length;
+ app.innerHTML=`<div class="step">Step 2 of 2</div><div class="title">The Tree Hunter’s Oath</div><div class="scroll">${OATH}</div>
+ <div class="center"><button class="btn ghost small" onclick="say(OATH)">🔊 Read the oath aloud</button></div>
+ <p class="lead">Each hunter: raise your right hand, say the oath, then tap your avatar to sign!</p>
+ <div class="signgrid">${ms.map(m=>`<button class="sign ${signed.has(m.id)?'done':''}" style="--c:${m.color}" onclick="signOath('${m.id}')"><span class="e">${signed.has(m.id)?'✅':m.avatar}</span><span>${esc(m.name)}</span></button>`).join('')}</div>
+ ${left?`<p class="hint">${left} hunter${left>1?'s':''} left to sign</p>`:`<button class="btn red big" onclick="finishOnboarding()">🎄 Let the Hunt begin!</button>`}
+ <button class="btn ghost" onclick="go('setup')">← Back to the team</button>`}
+function signOath(id){if(signed.has(id))return;signed.add(id);chime();vibrate(30);if(!S.badges.some(b=>b.id==='oath'&&b.m===id))S.badges.push({id:'oath',m:id,ts:Date.now()});save();renderOath();
+ if(activeMembers().every(m=>signed.has(m.id))){jingle();confetti(120);say(`Welcome to the hunt, ${famSpoken()}! You are now official tree hunters.`)}}
+function finishOnboarding(){S.onboarded=true;save();go('home');setTimeout(()=>toast('Tap “Start a Tree Hunt” when you hit the road! 🚗'),500)}
+
+/* ============ HOME ============ */
+function countdownChips(){const now=new Date(),t0=new Date();t0.setHours(0,0,0,0);let x=new Date(now.getFullYear(),11,25);const out=[];
+ if(now.getMonth()===11&&now.getDate()===25)out.push('🎄 Merry Christmas!');else{if(t0>x)x=new Date(now.getFullYear()+1,11,25);const d=Math.round((x-t0)/864e5);out.push(`🎅 ${d} sleep${d===1?'':'s'} until Christmas`)}
+ const tg=thanksgiving(now.getFullYear()),td=Math.round((tg-t0)/864e5);if(td===0)out.push('🦃 Happy Thanksgiving!');else if(td>0&&td<=14)out.push(`🦃 Thanksgiving in ${td} day${td>1?'s':''}`);
+ return out.map(c=>`<span>${c}</span>`).join('')}
+function treeSVG(n){let o='';for(let i=0;i<Math.min(n,SLOTS.length);i++){const[x,y]=SLOTS[i],c=ORN[i%ORN.length].c;o+=`<circle cx="${x}" cy="${y}" r="7" fill="${c}" stroke="rgba(0,0,0,.25)"/><circle cx="${x-2.3}" cy="${y-2.3}" r="2" fill="#fff" opacity=".7"/>`}
+ return `<svg viewBox="0 0 200 236" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3fae6a"/><stop offset="1" stop-color="#1d6b40"/></linearGradient></defs><rect x="88" y="208" width="24" height="24" rx="3" fill="#7a4a24"/><polygon points="100,105 10,212 190,212" fill="url(#tg)"/><polygon points="100,55 25,152 175,152" fill="url(#tg)"/><polygon points="100,20 40,92 160,92" fill="url(#tg)"/>${o}<polygon points="100,2 103.5,10.5 112,11 105.5,16.5 107.5,25 100,20.5 92.5,25 94.5,16.5 88,11 96.5,10.5" fill="${n>0?'#f4c95d':'#5d7a6b'}"${n>0?' style="filter:drop-shadow(0 0 6px #f4c95d)"':''}/></svg>`}
+function renderHome(){const y=curSeason(),ev=eventsOf(y),today=ev.filter(e=>dayKey(e.ts)===dayKey(Date.now())).length;
+ const orns=S.log.filter(l=>l.result==='done'&&seasonOf(l.ts)===y).length,act=activeSession(),hunts=S.sessions.filter(s=>seasonOf(s.start)===y).length;
+ const bdg=S.badges.filter(b=>b.season===y&&MS_ICON[b.id]);
+ app.innerHTML=`<div class="title small">${famTitle()}<br>Great Christmas Tree Hunt</div><div class="chip-center">${countdownChips()}</div>
+ <div class="card center"><div class="label">${y} season · trees spotted</div><div class="bigcount">${ev.length}</div><div class="sub">${today} today · ${hunts} hunt${hunts===1?'':'s'}</div>${bdg.length?`<div class="badges">${bdg.map(b=>`<span>${MS_ICON[b.id]}</span>`).join('')}</div>`:''}</div>
+ <button class="btn red big" onclick="${act?"go('session')":'startHuntPrompt()'}">${act?'🎄 Back to the hunt':'🎄 Start a Tree Hunt'}</button>
+ <div class="card"><h3>Our Family Tree</h3><div class="treebox">${treeSVG(orns)}</div><p class="sub center">${orns?`${orns} ornament${orns>1?'s':''} earned this season`:'Complete Santa’s challenges to decorate your tree!'}</p></div>
+ ${S.saved.length?`<button class="btn ghost" onclick="go('saved')">🔖 Saved challenges (${S.saved.length})</button>`:''}`}
+
+/* ============ HUNT SESSION ============ */
+let huntWho=new Set(),lastTap={};
+function startHuntPrompt(){unlockAudio();huntWho=new Set(activeMembers().map(m=>m.id));drawHuntPrompt('')}
+function drawHuntPrompt(lbl){showOverlay(`<h2>🎄 New Tree Hunt</h2><label>Where are we hunting?</label><input id="huntLabel" placeholder="e.g. Drive to Grandma’s" value="${esc(lbl)}" maxlength="40">
+ <div class="chips">${['Road trip','Neighborhood drive','Errands','Visiting family','Christmas lights tour'].map(c=>`<button onclick="$('#huntLabel').value='${c}'">${c}</button>`).join('')}</div>
+ <label>Who’s hunting?</label><div class="whogrid">${activeMembers().map(m=>`<button class="who ${huntWho.has(m.id)?'on':''}" onclick="toggleWho('${m.id}')">${m.avatar}<br><small>${esc(m.name)}</small></button>`).join('')}</div>
+ <div class="safety">🚗 <b>Passengers only.</b> The driver never touches the phone — challenges are read out loud.</div>
+ <button class="btn red" onclick="startHunt()">Start the Hunt!</button><button class="btn ghost" onclick="closeOverlay()">Cancel</button>`)}
+function toggleWho(id){const l=$('#huntLabel').value;huntWho.has(id)?huntWho.delete(id):huntWho.add(id);drawHuntPrompt(l)}
+function startHunt(){if(!huntWho.size){toast('Pick at least one hunter');return}const label=($('#huntLabel').value||'').trim()||'Tree Hunt';
+ const s={id:uid(),label,start:Date.now(),end:null,who:[...huntWho],gifts:0,pending:0,done:0,skipped:0,device:S.deviceId};S.sessions.push(s);S.activeSession=s.id;save();
+ closeOverlay();go('session');wake();jingle();say('Let the hunt begin! Eyes peeled, hunters. Every five trees unlocks a surprise from Santa.')}
+function renderSession(){const s=activeSession();if(!s){view='home';return renderHome()}
+ const ev=sessionEvents(s),total=ev.length,per={};ev.forEach(e=>per[e.m]=(per[e.m]||0)+1);
+ const who=s.who.map(member).filter(Boolean),toNext=5-(total%5),last=ev[ev.length-1],lm=last&&member(last.m);
+ app.innerHTML=`<div class="sesstop"><button class="iconbtn" onclick="go('home')" aria-label="Home">🏠</button><div class="sesslabel">${esc(s.label)}<br><span id="timer">${fmtDur(Date.now()-s.start)}</span></div><button class="iconbtn" onclick="S.settings.sound=!S.settings.sound;save();render()" aria-label="Sound">${S.settings.sound?'🔔':'🔕'}</button></div>
+ <div class="counter"><div class="bigcount">${total}</div><div class="sub">trees this hunt · ${eventsOf(curSeason()).length} this season</div></div>
+ <div class="nextgift">🎁 Next surprise in <b>${toNext}</b> tree${toNext>1?'s':''}<div class="progress"><div style="width:${(total%5)*20}%"></div></div></div>
+ <div class="spotgrid ${who.length===1?'one':''} ${who.length>1&&who.length%2?'odd':''}">${who.map(m=>`<button class="spot" data-m="${m.id}" style="background:${m.color}" onclick="tapSpot('${m.id}',event)"><span class="c">${per[m.id]||0}</span><span class="e">${m.avatar}</span><span class="n">${esc(m.name)}</span><span class="t">🎄 I spotted one!</span></button>`).join('')}</div>
+ <button class="btn ghost" style="margin-top:16px" ${last?'':'disabled'} onclick="undoTree()">↩️ Undo${lm?' '+esc(lm.name)+'’s last tree':''}</button>
+ <button class="btn ghost redtext" onclick="endHuntPrompt()">🏁 End this hunt</button>
+ ${s.pending>0?`<button class="giftchip" onclick="openGift()" aria-label="Open surprise">🎁<b>${s.pending}</b></button>`:''}`}
+function tapSpot(mid,ev){const now=Date.now();if(now-(lastTap[mid]||0)<300)return;lastTap[mid]=now;unlockAudio();
+ const s=activeSession();if(!s)return;S.events.push({id:uid(),ts:now,m:mid,s:s.id});
+ const total=sessionEvents(s).length,st=eventsOf(seasonOf(now)).length;chime();vibrate(25);floatPlus(ev);
+ if(st===1)queueOverlay(()=>showMilestone('first'));
+ if(MILESTONES.includes(st))queueOverlay(()=>showMilestone(st));
+ const g=Math.floor(total/5);if(g>s.gifts){s.gifts=g;s.pending++;queueOverlay(openGift)}
+ save();render();const b=document.querySelector(`[data-m="${mid}"]`);b&&b.classList.add('pop')}
+function undoTree(){const s=activeSession();if(!s)return;for(let i=S.events.length-1;i>=0;i--){if(S.events[i].s===s.id){S.events.splice(i,1);break}}save();vibrate(15);toast('Removed one tree ↩️');render()}
+function endHuntPrompt(){showOverlay(`<h2>🏁 End this hunt?</h2><p>The trees are saved either way. You can always start a new hunt.</p><button class="btn red" onclick="endHunt()">Yes, end the hunt</button><button class="btn ghost" onclick="closeOverlay()">Keep hunting</button>`)}
+function endHunt(){const s=activeSession();if(!s)return closeOverlay();clearTimer();s.end=Date.now();s.pending=0;S.activeSession=null;cur=null;queue=[];sleepOk();save();
+ const ev=sessionEvents(s),dur=s.end-s.start,per={};ev.forEach(e=>per[e.m]=(per[e.m]||0)+1);
+ const topId=Object.keys(per).sort((a,b)=>per[b]-per[a])[0],tm=topId&&member(topId);
+ const y=seasonOf(s.start),best=Math.max(0,...S.sessions.filter(x=>x.id!==s.id&&seasonOf(x.start)===y).map(x=>sessionEvents(x).length));
+ const rate=dur>=60000?(ev.length/(dur/36e5)).toFixed(1):'—',record=ev.length>0&&ev.length>best&&S.sessions.filter(x=>seasonOf(x.start)===y).length>1;
+ go('home');jingle();if(ev.length)confetti(80);
+ showOverlay(`<div class="center"><div style="font-size:64px">🏁</div><h2>Hunt complete!</h2><div class="mnum" style="font-size:72px">${ev.length}</div><p><b>trees spotted</b> on “${esc(s.label)}”</p>${record?'<div class="badgepill">🚗 New season record for one hunt!</div>':''}</div>
+ <div class="stats"><div class="stat" style="background:var(--paper)"><div class="k" style="color:var(--brown)">Time</div><div class="val">${fmtDur(dur)}</div></div><div class="stat" style="background:var(--paper)"><div class="k" style="color:var(--brown)">Trees / hour</div><div class="val">${rate}</div></div><div class="stat" style="background:var(--paper)"><div class="k" style="color:var(--brown)">Challenges done</div><div class="val">${s.done||0} ⭐</div></div><div class="stat" style="background:var(--paper)"><div class="k" style="color:var(--brown)">Top spotter</div><div class="val">${tm?tm.avatar+' '+esc(tm.name):'—'}</div></div></div>
+ <button class="btn red" onclick="closeOverlay();render()">🎄 Back home</button>`);
+ say(`Hunt complete! You spotted ${ev.length} tree${ev.length===1?'':'s'}.${tm?` Top spotter: ${tm.name}!`:''}`)}
+
+/* ============ SURPRISES ============ */
+let cur=null,timerH=null;
+function pickChallenge(){const types=Object.keys(TYPES),tot=types.reduce((a,t)=>a+TYPES[t].w,0);let r=Math.random()*tot,type=types[0];for(const t of types){if((r-=TYPES[t].w)<0){type=t;break}}
+ let pool=CH.filter(c=>c.type===type&&!S.used.includes(c.id));if(!pool.length){S.used=S.used.filter(id=>!CHM[id]||CHM[id].type!==type);pool=CH.filter(c=>c.type===type)}
+ const c=rand(pool);S.used.push(c.id);save();return c.id}
+function spoken(c){switch(c.type){case'trivia':return `${c.q} Is it: ${c.o.map((o,i)=>'ABC'[i]+', '+o).join('. ')}?`;case'charades':return 'Seat charades! '+c.q+'. No words allowed!';case'sing':return 'Finish the carol! '+c.q;case'riddle':return 'Riddle time! '+c.q;case'family':return 'Family question! '+c.q;case'challenge':return 'Quick challenge! '+c.q;default:return c.q}}
+function openGift(){const s=activeSession();if(!s||s.pending<=0){nextQ();return}unlockAudio();
+ if(!cur||cur.s!==s.id||cur.fromSaved)cur={cid:pickChallenge(),opened:false,s:s.id};
+ if(cur.opened)return showChallenge();
+ showOverlay(`<div class="center"><div class="gtitle">A present from the North Pole!</div><button class="gift" id="giftbox" onclick="unwrap()">🎁</button><p class="sub">Tap the present to open it!</p><button class="linkbtn" onclick="minimize()">Not now — keep counting</button></div>`);
+ fanfare();say('Ho ho ho! A present has arrived. Tap it to open!')}
+function unwrap(){const g=$('#giftbox');if(!g||!cur||cur.opened)return;g.classList.add('open');chime();confetti(40);vibrate([20,40,20]);setTimeout(()=>{cur.opened=true;showChallenge()},450)}
+function showChallenge(){const c=CHM[cur.cid],T=TYPES[c.type];let body='';
+ if(c.type==='trivia'){body=`<div class="lvl">${c.l==='kid'?'🧒 Kids’ question':c.l==='adult'?'🧑 Grown-up question':'👪 Everyone can answer'}</div><div class="q">${esc(c.q)}</div><div>${c.o.map((o,i)=>`<button class="opt ${cur.pick!=null?(i===c.ans?'right':(i===cur.pick?'wrong':'')):''}" onclick="pickOpt(${i})">${'ABC'[i]}. ${esc(o)}</button>`).join('')}</div>${cur.pick==null?`<button class="btn ghost small" onclick="pickOpt(-1)">👀 Reveal the answer</button>`:`<div class="fact">✅ <b>${esc(c.o[c.ans])}</b>${c.f?' — '+esc(c.f):''}</div>`}`}
+ else if(c.type==='sing'){body=`<div class="lvl">Sing the next line! · ${esc(c.src)}</div><div class="q">${esc(c.q)}</div>${cur.rev?`<div class="fact">🎶 <b>${esc(c.a)}</b></div>`:`<button class="btn ghost small" onclick="reveal()">👀 Show the next line</button>`}`}
+ else if(c.type==='riddle'){body=`<div class="q">${esc(c.q)}</div>${cur.rev?`<div class="fact">💡 <b>${esc(c.a)}</b></div>`:`<button class="btn ghost small" onclick="reveal()">👀 Reveal the answer</button>`}`}
+ else if(c.type==='challenge'){body=`<div class="q">${esc(c.q)}</div>${c.t?`<button class="btn red small" id="ctimer" onclick="startTimer()">⏱️ Start ${c.t}-second timer</button> `:''}${c.a?(cur.rev?`<div class="fact">💡 ${esc(c.a)}</div>`:`<button class="btn ghost small" onclick="reveal()">👀 Answer</button>`):''}`}
+ else if(c.type==='charades'){body=`<div class="q">${esc(c.q)}</div><p class="sub">No words — act it out from your seat while everyone else guesses! (Driver: guessing only 😉)</p>`}
+ else body=`<div class="q">${esc(c.q)}</div><p class="sub">Go around the car — everyone answers!</p>`;
+ showOverlay(`<div class="ctype" style="background:${T.color}">${T.icon} ${T.name}</div>${body}
+ <button class="btn green" onclick="doneChallenge()">✅ We did it!</button>
+ <div class="row"><button class="btn ghost" onclick="laterChallenge()">🔖 Later</button><button class="btn ghost" onclick="skipChallenge()">⏭️ Skip</button></div>
+ <div class="row center"><button class="linkbtn" onclick="say(spoken(CHM[cur.cid]))">🔊 Read again</button>${cur.s&&!cur.fromSaved?'<button class="linkbtn" onclick="minimize()">🎄 Hide &amp; keep counting</button>':''}</div>`,'challenge');
+ if(!cur.spoken){cur.spoken=true;say(spoken(c))}}
+function pickOpt(i){if(cur.pick!=null)return;cur.pick=i;const c=CHM[cur.cid];if(i===c.ans){chime();confetti(30);say('Correct! '+(c.f||''))}else say(`The answer is ${c.o[c.ans]}. ${c.f||''}`);showChallenge()}
+function reveal(){cur.rev=true;say(CHM[cur.cid].a);showChallenge()}
+function startTimer(){if(timerH)return;let left=CHM[cur.cid].t;const upd=()=>{const el=$('#ctimer');if(el)el.textContent=left>0?`⏱️ ${left}`:'⏰ Time’s up!'};upd();say('Go!');
+ timerH=setInterval(()=>{left--;upd();if(left<=0){clearTimer();beep();say('Time’s up!')}else if(left<=3){unlockAudio();tone(660,0,.1,'square',.06)}},1000)}
+function clearTimer(){if(timerH){clearInterval(timerH);timerH=null}}
+function minimize(){clearTimer();closeOverlay()}
+function starPool(){const s=cur.s&&S.sessions.find(x=>x.id===cur.s);return(s?s.who:activeMembers().map(m=>m.id)).filter(member)}
+function doneChallenge(){clearTimer();const ids=starPool();
+ showOverlay(`<h2 class="center">⭐ Who earns the star?</h2><p class="center sub">Tap the winner — or give everyone a star!</p><div class="whogrid">${ids.map(id=>{const m=member(id);return `<button class="who" onclick="award(['${id}'])">${m.avatar}<br><small>${esc(m.name)}</small></button>`}).join('')}</div><button class="btn" onclick="award(starPool())">🎄 Everyone gets a star!</button>`,'challenge')}
+function consumeGift(result){if(cur.fromSaved){S.saved=S.saved.filter(x=>x.cid!==cur.cid);return}const s=S.sessions.find(x=>x.id===cur.s);if(s){s.pending=Math.max(0,s.pending-1);if(result==='done')s.done=(s.done||0)+1;if(result==='skip')s.skipped=(s.skipped||0)+1}}
+function logIt(result,stars){S.log.push({id:uid(),ts:Date.now(),s:cur.s||null,cid:cur.cid,type:CHM[cur.cid].type,result,stars:stars||[]})}
+function award(list){logIt('done',list);consumeGift('done');save();
+ const n=S.log.filter(l=>l.result==='done'&&seasonOf(l.ts)===curSeason()).length,orn=ORN[(n-1)%ORN.length],msg=rand(SANTA);fanfare();confetti(60);
+ showOverlay(`<div class="center"><div class="ornbig" style="--oc:${orn.c}"></div><h2>A new ornament!</h2><div class="ornname">${orn.n}</div><p class="santa">🎅 “${esc(msg)}”</p><p class="sub">${n} ornament${n>1?'s':''} on your family tree this season</p><button class="btn red" onclick="finishGift()">${cur.s&&!cur.fromSaved?'🎄 Back to the hunt':'🎄 Done'}</button></div>`);
+ say(`${msg} You earned a new ornament: the ${orn.n}!`)}
+function skipChallenge(){clearTimer();logIt('skip');consumeGift('skip');finishGift()}
+function laterChallenge(){clearTimer();if(!cur.fromSaved){S.saved.push({cid:cur.cid,ts:Date.now()});logIt('later');consumeGift('later')}toast('Saved for later 🔖');finishGift()}
+function finishGift(){cur=null;save();closeOverlay();render()}
+function showMilestone(n){const y=curSeason(),key=n==='first'?'first':'m'+n;if(S.badges.some(b=>b.id===key&&b.season===y)){nextQ();return}
+ S.badges.push({id:key,season:y,ts:Date.now()});save();jingle();confetti(140);vibrate([40,60,40,60,80]);
+ if(n==='first'){const e=eventsOf(y)[0],m=e&&member(e.m);showOverlay(`<div class="center"><div style="font-size:90px">🌟</div><h2>The first tree of the ${y} season!</h2><p>Spotted by <b>${m?m.avatar+' '+esc(m.name):'your family'}</b> on ${fmtDate(e?e.ts:Date.now())}.</p><div class="badgepill">🌟 First Tree badge</div><button class="btn red" onclick="closeOverlay()">🎄 Keep hunting!</button></div>`);say(`The first Christmas tree of the season! Spotted by ${m?m.name:'your family'}!`)}
+ else{showOverlay(`<div class="center"><div class="mnum">${n}</div><h2>TREES THIS SEASON!</h2><p>${MS_MSG[n]}</p><div class="badgepill">🏅 ${MS_ICON[key]} badge unlocked</div><button class="btn red" onclick="closeOverlay()">🎄 Keep hunting!</button></div>`);say(`${n} trees! ${MS_MSG[n]}`)}}
+function renderSaved(){app.innerHTML=`<div class="title small">🔖 Saved Challenges</div>${S.saved.length?S.saved.map(x=>{const c=CHM[x.cid];if(!c)return '';const T=TYPES[c.type];return `<button class="savedrow" onclick="openSaved('${x.cid}')"><span class="ctype sm" style="background:${T.color}">${T.icon} ${T.name}</span><br>${esc(c.q)}</button>`}).join(''):'<p class="sub center">Nothing saved. Tap “Later” on a challenge to keep it here.</p>'}<button class="btn ghost" onclick="go('home')">← Back home</button>`}
+function openSaved(cid){unlockAudio();cur={cid,opened:true,s:null,fromSaved:true};showChallenge()}
+
+/* ============ HISTORY ============ */
+let histSeason=null;
+function seasonsList(){const set=new Set([curSeason()]);S.events.forEach(e=>set.add(seasonOf(e.ts)));S.sessions.forEach(s=>set.add(seasonOf(s.start)));return[...set].sort((a,b)=>b-a)}
+function seasonStats(y){const ev=eventsOf(y).sort((a,b)=>a.ts-b.ts),ss=S.sessions.filter(s=>seasonOf(s.start)===y);
+ const hrs=ss.reduce((a,s)=>a+((s.end||Date.now())-s.start),0)/36e5,inHunt=ev.filter(e=>e.s).length,days={},weeks={};
+ ev.forEach(e=>{const k=dayKey(e.ts);days[k]=(days[k]||0)+1;const d=new Date(e.ts);d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));weeks[d.getTime()]=(weeks[d.getTime()]||0)+1});
+ let best=null,pw=null;for(const k in days)if(!best||days[k]>best[1])best=[k,days[k]];for(const k in weeks)if(!pw||weeks[k]>pw[1])pw=[+k,weeks[k]];
+ const tg=thanksgiving(y).getTime(),before=ev.filter(e=>e.ts<tg).length;
+ return{y,ev,ss,hrs,rate:hrs>=1/60?inHunt/hrs:null,days,best,pw,tg,before,after:ev.length-before,first:ev[0]}}
+function dailyChart(st){if(!st.ev.length)return '<p class="sub">No trees yet this season — the chart fills in as you hunt.</p>';
+ const start=new Date(st.ev[0].ts);start.setHours(0,0,0,0);const end=st.y===curSeason()?new Date():new Date(st.ev[st.ev.length-1].ts);end.setHours(0,0,0,0);
+ const days=[];for(const d=new Date(start);d<=end&&days.length<120;d.setDate(d.getDate()+1))days.push(new Date(d));
+ const max=Math.max(1,...days.map(d=>st.days[dayKey(d)]||0)),tgk=dayKey(st.tg),xk=dayKey(new Date(st.y,11,25));
+ return `<div class="chart">${days.map((d,i)=>{const k=dayKey(d),v=st.days[k]||0,mk=k===tgk?'tg':k===xk?'xm':'';return `<div class="col ${mk}"><div class="v">${v||''}</div><div class="bw"><div class="bar" style="height:${v/max*100}%"></div></div><div class="dl">${mk==='tg'?'🦃':mk==='xm'?'🎄':(i%7===0?(d.getMonth()+1)+'/'+d.getDate():'')}</div></div>`}).join('')}</div><p class="legend">🦃 Thanksgiving · 🎄 Christmas Day</p>`}
+function stat(i,k,v){return `<div class="stat"><div class="k">${i} ${k}</div><div class="val">${v}</div></div>`}
+function renderHistory(){const list=seasonsList();if(!histSeason||!list.includes(histSeason))histSeason=list[0];const st=seasonStats(histSeason),fm=st.first&&member(st.first.m);
+ const hunts=[...st.ss].sort((a,b)=>b.start-a.start).map(s=>{const n=sessionEvents(s).length,dur=(s.end||Date.now())-s.start;return `<div class="hunt"><div><b>${esc(s.label)}</b><br><small>${fmtDate(s.start)} · ${fmtDur(dur)}${s.end?'':' · in progress'}</small></div><div class="hn">${n} 🎄<br><small>${dur>=60000?(n/(dur/36e5)).toFixed(1):'—'}/hr · ${s.done||0} ⭐</small></div></div>`}).join('');
+ const cmp=list.length>1?`<div class="card"><h3>Year vs. year</h3><table class="cmp"><tr><th>Season</th><th>Trees</th><th>First tree</th><th>Trees/hr</th></tr>${list.map(y=>{const s=seasonStats(y);return `<tr><td>${y}</td><td>${s.ev.length}</td><td>${s.first?fmtDate(s.first.ts):'—'}</td><td>${s.rate?s.rate.toFixed(1):'—'}</td></tr>`}).join('')}</table></div>`:'';
+ app.innerHTML=`<div class="title small">📜 Hunt History</div><div class="tabs">${list.map(y=>`<button class="${y===histSeason?'on':''}" onclick="histSeason=${y};renderHistory()">${y} season</button>`).join('')}</div>
+ <div class="stats">${stat('🎄','Total trees',st.ev.length)}${stat('🌟','First tree',st.first?fmtDate(st.first.ts)+(fm?' · '+esc(fm.name):''):'—')}${stat('🚗','Hunts',st.ss.length)}${stat('⏱️','Time hunting',st.ss.length?fmtHrs(st.hrs):'—')}${stat('📈','Trees per hour',st.rate?st.rate.toFixed(1):'—')}${stat('🏆','Best day',st.best?fmtDate(keyDate(st.best[0]))+' · '+st.best[1]:'—')}${stat('📅','Peak week',st.pw?'Wk of '+fmtDate(st.pw[0])+' · '+st.pw[1]:'—')}${stat('🦃','Before / after Thanksgiving',st.before+' / '+st.after)}</div>
+ <p class="note">💡 <b>Trees per hour</b> is the fair number to compare between years — it adjusts for how much you drove.</p>
+ <div class="card"><h3>Trees per day</h3>${dailyChart(st)}</div>${cmp}
+ <div class="card"><h3>Hunts</h3>${hunts||'<p class="sub">No hunts yet this season.</p>'}</div>`}
+
+/* ============ FAMILY ============ */
+function renderFamily(){const y=curSeason(),ev=eventsOf(y),log=S.log.filter(l=>l.result==='done'&&seasonOf(l.ts)===y),today=dayKey(Date.now());
+ const ms=S.family.members.filter(m=>!m.archived||ev.some(e=>e.m===m.id));
+ const trees=id=>ev.filter(e=>e.m===id).length,stars=id=>log.filter(l=>(l.stars||[]).includes(id)).length,
+  trivia=id=>log.filter(l=>l.type==='trivia'&&l.stars&&l.stars.length===1&&l.stars[0]===id).length,
+  td=id=>ev.filter(e=>e.m===id&&dayKey(e.ts)===today).length,
+  hunts=id=>S.sessions.filter(s=>seasonOf(s.start)===y&&S.events.some(e=>e.s===s.id&&e.m===id)).length,
+  oneHunt=id=>Math.max(0,...S.sessions.filter(s=>seasonOf(s.start)===y).map(s=>sessionEvents(s).filter(e=>e.m===id).length));
+ const top=f=>{let b=null,bv=0;ms.forEach(m=>{const v=f(m.id);if(v>bv){b=m;bv=v}});return b?{m:b,v:bv}:null};
+ const awards=[['🌟','Spotter of the Day',top(td),'trees today'],['🏆','Season Champion',top(trees),'trees this season'],['🚗','Most Trees in One Hunt',top(oneHunt),'trees in a single hunt'],['🧠','Trivia Champion',top(trivia),'trivia wins'],['🔥','Most Active Hunter',top(hunts),'hunts'],['⭐','Star Collector',top(stars),'stars']];
+ const ranked=[...ms].sort((a,b)=>trees(b.id)-trees(a.id)||stars(b.id)-stars(a.id));
+ app.innerHTML=`<div class="title small">👪 ${famTitle()} Leaderboard</div>
+ <div class="card"><h3>${y} season</h3>${ranked.map((m,i)=>`<div class="lb"><span class="rk">${['🥇','🥈','🥉'][i]||i+1}</span><span class="emo" style="font-size:28px">${m.avatar}</span><span class="nm">${esc(m.name)}</span><span class="sc">${trees(m.id)} 🎄<br>${stars(m.id)} ⭐</span></div>`).join('')||'<p class="sub">Add hunters in Settings.</p>'}</div>
+ <div class="card"><h3>Family awards</h3>${awards.map(([i,n,t,u])=>`<div class="award"><span class="ai">${i}</span><span class="at"><b>${n}</b><small>${t?`${t.m.avatar} ${esc(t.m.name)} · ${t.v} ${u}`:'Up for grabs!'}</small></span></div>`).join('')}</div>
+ <p class="note">All in good fun — every tree counts toward the family total! 🎄</p>`}
+
+/* ============ SETTINGS & DATA ============ */
+let ed=null;
+function renderSettings(){const tg=(k,l)=>`<div class="trow"><span>${l}</span><button class="tog ${S.settings[k]?'on':''}" onclick="S.settings.${k}=!S.settings.${k};save();renderSettings()" aria-label="${l}"></button></div>`;
+ app.innerHTML=`<div class="title small">⚙️ Settings</div>
+ <div class="card"><label style="margin-top:0">Family name</label><input value="${esc(S.family.name)}" oninput="S.family.name=this.value;save()" maxlength="30"></div>
+ <div class="card"><h3>Hunt team</h3>${activeMembers().map(m=>memberRow(m,`<button class="x" onclick="editMember('${m.id}')" aria-label="Edit">✏️</button>`)).join('')}<button class="btn green" onclick="editMember(null)">➕ Add a hunter</button></div>
+ <div class="card"><h3>Sound &amp; voice</h3>${tg('sound','🔔 Sound effects')}${tg('voice','🗣️ Read challenges out loud')}</div>
+ <div class="card"><h3>Your data</h3><p class="sub">Everything saves on this phone automatically. Save a backup now and then — and always before switching phones.</p>
+  <button class="btn ghost" onclick="exportJSON()">💾 Save a backup file</button><button class="btn ghost" onclick="exportCSV()">📊 Export trees to a spreadsheet (CSV)</button><button class="btn ghost" onclick="$('#imp').click()">📥 Restore or merge a backup</button><input type="file" id="imp" accept=".json,application/json" hidden onchange="importJSON(this)"></div>
+ <div class="card"><button class="btn ghost" onclick="go('intro')">✉️ Replay Santa’s letter</button><button class="btn ghost redtext" onclick="resetAll()">🗑️ Erase everything</button></div>
+ <p class="foot">The Great Christmas Tree Hunt · Phase 1 · v1.0</p>`}
+function editMember(id){const m=id&&member(id);ed=m?{id,name:m.name,avatar:m.avatar,kind:m.kind}:{id:null,name:'',avatar:'⛄',kind:'kid'};drawEdit()}
+function setEdAv(a){ed.avatar=a;drawEdit()}
+function drawEdit(){showOverlay(`<h2>${ed.id?'Edit hunter':'New hunter'}</h2><label>Name or nickname</label><input value="${esc(ed.name)}" oninput="ed.name=this.value" maxlength="20"><label>Avatar</label>${avatarPicker(ed.avatar,'setEdAv')}<label>Trivia level</label><div class="seg"><button class="${ed.kind==='kid'?'on':''}" onclick="ed.kind='kid';drawEdit()">🧒 Kid</button><button class="${ed.kind==='adult'?'on':''}" onclick="ed.kind='adult';drawEdit()">🧑 Grown-up</button></div>
+ <button class="btn green" onclick="saveEdit()">Save</button>${ed.id?'<button class="btn ghost redtext" onclick="archiveMember()">Remove from the team</button>':''}<button class="btn ghost" onclick="closeOverlay()">Cancel</button>`)}
+function saveEdit(){const n=ed.name.trim();if(!n){toast('A name is needed');return}if(ed.id)Object.assign(member(ed.id),{name:n,avatar:ed.avatar,kind:ed.kind});else newMember(n,ed.avatar,ed.kind);save();closeOverlay();render()}
+function archiveMember(){const m=member(ed.id);if(!confirm(`Remove ${m.name} from the team? Their past trees stay in your history.`))return;m.archived=true;save();closeOverlay();render()}
+function download(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500)}
+function exportJSON(){download(`tree-hunt-backup-${dayKey(Date.now())}.json`,JSON.stringify(S),'application/json');toast('Backup saved 💾')}
+function exportCSV(){const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"',rows=[['Date','Time','Season','Spotter','Hunt']];
+ [...S.events].sort((a,b)=>a.ts-b.ts).forEach(e=>{const s=S.sessions.find(x=>x.id===e.s),m=member(e.m);rows.push([dayKey(e.ts),new Date(e.ts).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}),seasonOf(e.ts),m?m.name:'',s?s.label:''])});
+ download(`tree-hunt-trees-${dayKey(Date.now())}.csv`,rows.map(r=>r.map(q).join(',')).join('\n'),'text/csv');toast('Spreadsheet exported 📊')}
+function mergeInto(o){const u=(a,b,k=x=>x.id)=>{const seen=new Set(a.map(k));(b||[]).forEach(x=>{if(!seen.has(k(x))){a.push(x);seen.add(k(x))}})};
+ u(S.events,o.events);u(S.sessions,(o.sessions||[]).filter(s=>s.end));u(S.log,o.log);u(S.family.members,o.family&&o.family.members);u(S.badges,o.badges,b=>b.id+'|'+(b.m||'')+'|'+(b.season||''));u(S.saved,o.saved,x=>x.cid);
+ if(!S.family.name&&o.family&&o.family.name)S.family.name=o.family.name;if(o.onboarded)S.onboarded=true}
+function importJSON(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);if(!Array.isArray(o.events))throw 0;const before=S.events.length;mergeInto(o);save();toast(`Merged! ${S.events.length-before} new trees added.`);render()}catch(e){toast('That file isn’t a Tree Hunt backup')}inp.value=''};r.readAsText(f)}
+function resetAll(){if(!confirm('Erase ALL trees, hunts and family info on this phone? This cannot be undone.'))return;if(!confirm('Last chance — did you save a backup? Erase everything?'))return;localStorage.removeItem(KEY);S=blank();save();signed=new Set();draft={name:'',avatar:'🎅',kind:'kid'};go('intro')}
+
+/* ============ AMBIENCE & START ============ */
+(function(){const lc=['#ff5a6e','#ffd66b','#6be3a0','#6bb8ff','#ff9f5a'];$('#lights').innerHTML=Array.from({length:16},(_,i)=>`<span class="bulb" style="color:${lc[i%5]};background:${lc[i%5]};animation-delay:${(i%4)*.5}s"></span>`).join('')})();
+(function(){const c=$('#snow'),x=c.getContext('2d'),dpr=Math.min(2,window.devicePixelRatio||1),rm=matchMedia('(prefers-reduced-motion: reduce)').matches;let W,H;const fl=Array.from({length:60},()=>({x:Math.random(),y:Math.random(),r:Math.random()*2.2+.8,s:Math.random()*.0015+.0006,w:Math.random()*6}));
+ function rs(){W=c.width=innerWidth*dpr;H=c.height=innerHeight*dpr;c.style.width=innerWidth+'px';c.style.height=innerHeight+'px'}rs();addEventListener('resize',rs);
+ function f(t){x.clearRect(0,0,W,H);x.fillStyle='rgba(255,255,255,.85)';for(const p of fl){p.y+=p.s;if(p.y>1.02){p.y=-.02;p.x=Math.random()}x.beginPath();x.arc((p.x+Math.sin(t/1500+p.w)*.01)*W,p.y*H,p.r*dpr,0,7);x.fill()}if(!rm&&!document.hidden)requestAnimationFrame(f);else setTimeout(()=>requestAnimationFrame(f),500)}requestAnimationFrame(f)})();
+setInterval(()=>{if(view==='session'){const el=$('#timer'),s=activeSession();if(el&&s)el.textContent=fmtDur(Date.now()-s.start)}},1000);
+document.addEventListener('pointerdown',unlockAudio,{once:true});
+try{'speechSynthesis' in window&&speechSynthesis.getVoices()}catch(e){}
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
+render();if(activeSession())wake();
+</script>
+</body>
+</html>
